@@ -5,13 +5,11 @@ workflows:
     environment:
       flutter: stable
     scripts:
-      - name: Get packages
+      - name: Extract and build
         script: |
-          cd tezdrop_app
+          unzip tezdrop_flutter.zip
+          cd tezdrop/tezdrop_app
           flutter pub get
-      - name: Build APK
-        script: |
-          cd tezdrop_app
           flutter build apk --debug
     artifacts:
-      - tezdrop_app/build/app/outputs/flutter-apk/*.apk
+      - tezdrop/tezdrop_app/build/app/outputs/flutter-apk/*.apk
