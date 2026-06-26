@@ -3,15 +3,13 @@ workflows:
     name: TezDrop Android Build
     instance_type: mac_mini_m2
     environment:
-      flutter: stable
+      flutter: 3.19.6
     scripts:
       - name: Extract and build
         script: |
           unzip tezdrop_flutter.zip
           cd tezdrop
           echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
-          sed -i 's/android:name="io.flutter.app.FlutterApplication"/android:name="${applicationName}"/g' android/app/src/main/AndroidManifest.xml
-          sed -i 's/io.flutter.app.FlutterActivity/io.flutter.embedding.android.FlutterActivity/g' android/app/src/main/AndroidManifest.xml
           flutter pub get
           flutter build apk --debug
     artifacts:
