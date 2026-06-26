@@ -8,8 +8,8 @@ workflows:
       - name: Extract and build
         script: |
           unzip tezdrop_flutter.zip
-          cd tezdrop/tezdrop_app
+          cd tezdrop
           flutter pub get
           flutter build apk --debug
     artifacts:
-      - tezdrop/tezdrop_app/build/app/outputs/flutter-apk/*.apk
+      - tezdrop/build/app/outputs/flutter-apk/*.apk
