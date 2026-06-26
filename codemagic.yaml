@@ -9,6 +9,7 @@ workflows:
         script: |
           unzip tezdrop_flutter.zip
           cd tezdrop
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
           flutter pub get
           flutter build apk --debug
     artifacts:
