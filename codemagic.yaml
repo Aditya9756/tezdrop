@@ -1,0 +1,17 @@
+workflows:
+  android-workflow:
+    name: TezDrop Android Build
+    instance_type: mac_mini_m2
+    environment:
+      flutter: stable
+    scripts:
+      - name: Get packages
+        script: |
+          cd tezdrop_app
+          flutter pub get
+      - name: Build APK
+        script: |
+          cd tezdrop_app
+          flutter build apk --debug
+    artifacts:
+      - tezdrop_app/build/app/outputs/flutter-apk/*.apk
