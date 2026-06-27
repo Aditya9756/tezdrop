@@ -11,11 +11,14 @@ jobs:
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
-      - name: Fix and Build APK
+      - name: Fix CarouselController conflict
         run: |
           cd extracted/tezdrop_fixed
-          sed -i 's/\.withValues(alpha:/.withOpacity(/g' $(grep -rl "withValues" lib/)
-          sed -i 's/locationSettings: const LocationSettings(/desiredAccuracy:/g' lib/core/services/location_service.dart
+          find lib -name "*.dart" -exec sed -i 's/CarouselController()/CarouselSliderController()/g' {} \;
+          find lib -name "*.dart" -exec sed -i 's/CarouselController /CarouselSliderController /g' {} \;
+      - name: Build APK
+        run: |
+          cd extracted/tezdrop_fixed
           flutter pub get
           flutter build apk --debug --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
