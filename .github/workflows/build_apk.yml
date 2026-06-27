@@ -11,50 +11,24 @@ jobs:
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
-      - name: Fix all code issues
+      - name: Fix location_service
         run: |
           cd extracted/tezdrop_fixed
-
-          # Fix 1: location_service - replace locationSettings with desiredAccuracy
-          python3 -c "
-          content = open('lib/core/services/location_service.dart').read()
-          content = content.replace('''return await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );''', '''return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );''')
-          content = content.replace('''return await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
-      );''', '''return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );''')
-          open('lib/core/services/location_service.dart', 'w').write(content)
-          "
-
-          # Fix 2: pubspec - downgrade geolocator and carousel
-          python3 -c "
-          content = open('pubspec.yaml').read()
-          import re
-          content = re.sub(r'geolocator:.*', 'geolocator: ^9.0.2', content)
-          content = re.sub(r'carousel_slider:.*', 'carousel_slider: ^4.0.0', content)
-          open('pubspec.yaml', 'w').write(content)
-          "
-
-          # Fix 3: SortChip key conflict
-          python3 -c "
-          content = open('lib/views/restaurants/restaurants_screen.dart').read()
-          content = content.replace('final String label, key, current;', 'final String label, sortKey, current;')
-          content = content.replace('const _SortChip(this.label, this.key, this.current, this.onTap);', 'const _SortChip(this.label, this.sortKey, this.current, this.onTap);')
-          content = content.replace('current == key', 'current == sortKey')
-          content = content.replace('onTap(key)', 'onTap(sortKey)')
-          open('lib/views/restaurants/restaurants_screen.dart', 'w').write(content)
-          "
-
+          sed -i '/timeLimit:/d' lib/core/services/location_service.dart
+          sed -i 's/locationSettings: const LocationSettings(/desiredAccuracy:/g' lib/core/services/location_service.dart
+          sed -i '/accuracy: LocationAccuracy.high,/{n;/^[[:space:]]*),/d}' lib/core/services/location_service.dart
+      - name: Fix pubspec
+        run: |
+          cd extracted/tezdrop_fixed
+          sed -i 's/geolocator: .*/geolocator: ^9.0.2/' pubspec.yaml
+          sed -i 's/carousel_slider: .*/carousel_slider: ^4.0.0/' pubspec.yaml
+      - name: Fix SortChip
+        run: |
+          cd extracted/tezdrop_fixed
+          sed -i 's/final String label, key, current;/final String label, sortKey, current;/g' lib/views/restaurants/restaurants_screen.dart
+          sed -i 's/this\.key, this\.current/this.sortKey, this.current/g' lib/views/restaurants/restaurants_screen.dart
+          sed -i 's/current == key/current == sortKey/g' lib/views/restaurants/restaurants_screen.dart
+          sed -i 's/onTap(key)/onTap(sortKey)/g' lib/views/restaurants/restaurants_screen.dart
       - name: Build APK
         run: |
           cd extracted/tezdrop_fixed
