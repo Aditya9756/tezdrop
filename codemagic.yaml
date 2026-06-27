@@ -3,7 +3,7 @@ workflows:
     name: TezDrop Android Build
     instance_type: mac_mini_m2
     environment:
-      flutter: 3.19.6
+      flutter: 3.22.0
     scripts:
       - name: Extract and build
         script: |
