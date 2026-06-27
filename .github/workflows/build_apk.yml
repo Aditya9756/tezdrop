@@ -11,11 +11,13 @@ jobs:
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
-      - name: Fix CarouselController conflict
+      - name: Fix location_service timeLimit bug
         run: |
-          cd extracted/tezdrop_fixed
-          find lib -name "*.dart" -exec sed -i 's/CarouselController()/CarouselSliderController()/g' {} \;
-          find lib -name "*.dart" -exec sed -i 's/CarouselController /CarouselSliderController /g' {} \;
+          sed -i '/timeLimit: Duration(seconds: 10),/d' extracted/tezdrop_fixed/lib/core/services/location_service.dart
+      - name: Fix pubspec versions
+        run: |
+          sed -i 's/geolocator: \^10.1.0/geolocator: ^9.0.2/' extracted/tezdrop_fixed/pubspec.yaml
+          sed -i 's/carousel_slider: \^4.2.1/carousel_slider: ^4.0.0/' extracted/tezdrop_fixed/pubspec.yaml
       - name: Build APK
         run: |
           cd extracted/tezdrop_fixed
