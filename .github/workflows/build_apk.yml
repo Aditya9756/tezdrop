@@ -6,29 +6,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract ZIP
-        run: unzip tezdrop_v3_fixed.zip -d extracted
+        run: unzip tezdrop_v4_fixed.zip -d extracted
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
-      - name: Fix location_service
-        run: |
-          cd extracted/tezdrop_fixed
-          sed -i '/timeLimit:/d' lib/core/services/location_service.dart
-          sed -i 's/locationSettings: const LocationSettings(/desiredAccuracy:/g' lib/core/services/location_service.dart
-          sed -i '/accuracy: LocationAccuracy.high,/{n;/^[[:space:]]*),/d}' lib/core/services/location_service.dart
-      - name: Fix pubspec
-        run: |
-          cd extracted/tezdrop_fixed
-          sed -i 's/geolocator: .*/geolocator: ^9.0.2/' pubspec.yaml
-          sed -i 's/carousel_slider: .*/carousel_slider: ^4.0.0/' pubspec.yaml
-      - name: Fix SortChip
-        run: |
-          cd extracted/tezdrop_fixed
-          sed -i 's/final String label, key, current;/final String label, sortKey, current;/g' lib/views/restaurants/restaurants_screen.dart
-          sed -i 's/this\.key, this\.current/this.sortKey, this.current/g' lib/views/restaurants/restaurants_screen.dart
-          sed -i 's/current == key/current == sortKey/g' lib/views/restaurants/restaurants_screen.dart
-          sed -i 's/onTap(key)/onTap(sortKey)/g' lib/views/restaurants/restaurants_screen.dart
       - name: Build APK
         run: |
           cd extracted/tezdrop_fixed
