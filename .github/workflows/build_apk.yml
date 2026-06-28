@@ -6,17 +6,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract ZIP
-        run: unzip tezdrop_v10.zip -d extracted
+        run: unzip tezdrop_jules_final.zip -d extracted
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
       - name: Build APK
         run: |
-          cd extracted/tezdrop_fixed
+          cd extracted
           flutter pub get
           flutter build apk --debug --no-tree-shake-icons
       - uses: actions/upload-artifact@v4
         with:
           name: TezDrop-APK
-          path: extracted/tezdrop_fixed/build/app/outputs/flutter-apk/app-debug.apk
+          path: extracted/build/app/outputs/flutter-apk/app-debug.apk
