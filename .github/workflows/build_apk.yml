@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract ZIP
-        run: unzip tezdrop_complete.zip -d extracted
+        run: unzip tezdrop_v10.zip -d extracted
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
