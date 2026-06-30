@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/models/product_model.dart';
 import '../../core/routes/app_routes.dart';
 import '../../providers/app_state_provider.dart';
+import '../widgets/product_image.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -117,12 +118,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    color: const Color(0xFFF3F4F6),
-                    child: Center(
-                      child: Text(p.image,
-                          style: const TextStyle(fontSize: 100)),
-                    ),
+                  background: ProductImage(
+                    image: p.image,
+                    size: double.infinity,
+                    emojiFontSize: 100,
+                    borderRadius: BorderRadius.zero,
                   ),
                 ),
               ),
@@ -376,8 +376,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(r.image,
-                                              style: const TextStyle(fontSize: 32)),
+                                          ProductImage(
+                                            image: r.image,
+                                            size: 48,
+                                            emojiFontSize: 28,
+                                          ),
                                           const SizedBox(height: 6),
                                           Text(r.name,
                                               maxLines: 1,

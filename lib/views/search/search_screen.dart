@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/models/product_model.dart';
 import '../../core/routes/app_routes.dart';
 import '../../providers/app_state_provider.dart';
+import '../widgets/product_image.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -266,17 +267,10 @@ class _ResultsList extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(p.image,
-                        style: const TextStyle(fontSize: 28)),
-                  ),
+                ProductImage(
+                  image: p.image,
+                  size: 56,
+                  emojiFontSize: 28,
                 ),
                 const SizedBox(width: 12),
                 Expanded(

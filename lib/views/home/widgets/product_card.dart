@@ -4,6 +4,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/models/product_model.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../providers/app_state_provider.dart';
+import '../../widgets/product_image.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -49,17 +50,15 @@ class ProductCard extends StatelessWidget {
                   // Image area
                   Stack(
                     children: [
-                      Container(
+                      SizedBox(
                         height: 120,
                         width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFF3F4F6),
-                          borderRadius: BorderRadius.vertical(
+                        child: ProductImage(
+                          image: product.image,
+                          size: double.infinity,
+                          emojiFontSize: 52,
+                          borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(18)),
-                        ),
-                        child: Center(
-                          child: Text(product.image,
-                              style: const TextStyle(fontSize: 52)),
                         ),
                       ),
                       // Stock badge

@@ -5,6 +5,7 @@ import '../../core/models/order_model.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/services/firebase_service.dart';
 import '../../providers/app_state_provider.dart';
+import '../widgets/product_image.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -240,6 +241,22 @@ class _OrderCard extends StatelessWidget {
               ],
             ),
             const Divider(height: 18),
+            // Item thumbnails (real vendor photos or emoji fallback)
+            SizedBox(
+              height: 44,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: order.items.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (_, i) => ProductImage(
+                  image: order.items[i].image,
+                  size: 44,
+                  emojiFontSize: 22,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             // Items summary
             Text(
               order.items
