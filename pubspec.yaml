@@ -1,0 +1,47 @@
+name: tezdrop
+description: TezDrop - Lightning Fast Food & Grocery Delivery ⚡
+version: 1.0.0+1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  provider: ^6.1.1
+
+  # HTTP — Firebase REST API ke liye (no google-services.json needed)
+  http: ^1.1.2
+
+  # Maps & Location
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  geolocator: ^10.1.0
+
+  # Storage
+  shared_preferences: ^2.2.2
+
+  # UI
+  shimmer: ^3.0.0
+  pinput: ^4.0.0
+  google_fonts: ^6.1.0
+  confetti: ^0.7.0
+
+  # Utils
+  share_plus: ^7.2.1
+  url_launcher: ^6.2.2
+  cupertino_icons: ^1.0.6
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
