@@ -1,5 +1,7 @@
 name: TezDrop APK Build
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,9 +11,16 @@ jobs:
       - name: Extract ZIP
         run: unzip TezDrop_Final.zip -d extracted
 
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      # Yahan humne Flutter ka purana version dala jo v1 embedding allow karega
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.4'
+          flutter-version: '2.10.5' 
           channel: 'stable'
           cache: false
 
@@ -26,24 +35,13 @@ jobs:
           cd extracted/final
           flutter pub get
 
-      - name: Upgrade outdated plugins (fixes v1 embedding leftovers)
-        run: |
-          cd extracted/final
-          flutter pub upgrade --major-versions
-
+      # Yahan hum sirf build karenge bina pipe (| tee) ke, taaki agar fail ho toh sahi pata chale
       - name: Build APK
         run: |
           cd extracted/final
-          flutter build apk --release --no-tree-shake-icons -v \
+          flutter build apk --release --no-tree-shake-icons \
             --dart-define=FB_URL=${{ secrets.FB_URL }} \
-            --dart-define=OTP_KEY=${{ secrets.OTP_KEY }} 2>&1 | tee build.log
-
-      - name: Upload build log (always, even on failure)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-log
-          path: extracted/final/build.log
+            --dart-define=OTP_KEY=${{ secrets.OTP_KEY }}
 
       - uses: actions/upload-artifact@v4
         with:
