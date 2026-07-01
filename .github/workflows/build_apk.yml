@@ -26,12 +26,24 @@ jobs:
           cd extracted/final
           flutter pub get
 
+      - name: Upgrade outdated plugins (fixes v1 embedding leftovers)
+        run: |
+          cd extracted/final
+          flutter pub upgrade --major-versions
+
       - name: Build APK
         run: |
           cd extracted/final
-          flutter build apk --release --no-tree-shake-icons \
+          flutter build apk --release --no-tree-shake-icons -v \
             --dart-define=FB_URL=${{ secrets.FB_URL }} \
-            --dart-define=OTP_KEY=${{ secrets.OTP_KEY }}
+            --dart-define=OTP_KEY=${{ secrets.OTP_KEY }} 2>&1 | tee build.log
+
+      - name: Upload build log (always, even on failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: extracted/final/build.log
 
       - uses: actions/upload-artifact@v4
         with:
