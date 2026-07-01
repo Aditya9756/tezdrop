@@ -5,18 +5,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Extract ZIP
-        run: unzip tezdrop_fixed_v3.zip -d extracted
+        run: unzip TezDrop_Final.zip -d extracted
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
+
+      - name: Flutter Pub Get
+        run: |
+          cd extracted/final
+          flutter pub get
+
       - name: Build APK
         run: |
-          cd extracted
-          flutter pub get
-          flutter build apk --debug --no-tree-shake-icons
+          cd extracted/final
+          flutter build apk --release --no-tree-shake-icons \
+            --dart-define=FB_URL=${{ secrets.FB_URL }} \
+            --dart-define=OTP_KEY=${{ secrets.OTP_KEY }}
+
       - uses: actions/upload-artifact@v4
         with:
           name: TezDrop-APK
-          path: extracted/build/app/outputs/flutter-apk/app-debug.apk
+          path: extracted/final/build/app/outputs/flutter-apk/app-release.apk
