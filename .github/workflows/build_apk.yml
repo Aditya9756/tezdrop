@@ -13,6 +13,13 @@ jobs:
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
+          cache: false
+
+      - name: Clean stale build cache
+        run: |
+          cd extracted/final
+          flutter clean
+          rm -f pubspec.lock
 
       - name: Flutter Pub Get
         run: |
