@@ -1,30 +1,55 @@
-name: TezDrop APK Build
-on: [push]
+name: TezDrop Release APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Extract ZIP
-        run: |
-          unzip TezDrop_Final.zip -d extracted
-          ls extracted/
+        run: unzip TezDrop_Final_v2.zip -d extracted
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.4'
           channel: 'stable'
-      - name: Fix location_service
-        run: |
-          find extracted/ -name "location_service.dart" -exec sed -i '/timeLimit:/d' {} \;
-          find extracted/ -name "location_service.dart" -exec sed -i 's/locationSettings: const LocationSettings(/desiredAccuracy:/g' {} \;
-          find extracted/ -name "location_service.dart" -exec sed -i '/accuracy: LocationAccuracy.high,/{n;/^[[:space:]]*),/d}' {} \;
-          find extracted/ -name "pubspec.yaml" -exec sed -i 's/geolocator: .*/geolocator: ^9.0.2/' {} \;
-      - name: Build APK
+
+      - name: Flutter Pub Get
         run: |
           cd extracted/final
           flutter pub get
-          flutter build apk --debug --no-tree-shake-icons
+
+      - name: Build Release APK
+        run: |
+          cd extracted/final
+          flutter build apk --release --no-tree-shake-icons
+
+      - name: Rename APK
+        run: cp extracted/final/build/app/outputs/flutter-apk/app-release.apk TezDrop.apk
+
+      - name: Get Version
+        id: version
+        run: echo "tag=v$(date +'%Y.%m.%d')-$(date +'%H%M')" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: TezDrop ${{ steps.version.outputs.tag }}
+          body: |
+            ## ⚡ TezDrop App
+            Download TezDrop.apk below and install on Android!
+          files: TezDrop.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/upload-artifact@v4
         with:
           name: TezDrop-APK
-          path: extracted/final/build/app/outputs/flutter-apk/app-debug.apk
+          path: TezDrop.apk
